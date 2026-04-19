@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppProvider } from "@/lib/store";
+import { SidebarCollapseProvider } from "@/lib/sidebar-collapse";
 import { AppShell } from "@/components/kairos/AppShell";
 import Concierge from "./pages/Concierge";
 import Discover from "./pages/Discover";
@@ -21,6 +22,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AppProvider>
+          <SidebarCollapseProvider>
           <AppShell>
             <Routes>
               <Route path="/" element={<Concierge />} />
@@ -31,6 +33,7 @@ const App = () => (
               <Route path="*" element={<NotFound />} />
             </Routes>
           </AppShell>
+          </SidebarCollapseProvider>
         </AppProvider>
       </BrowserRouter>
     </TooltipProvider>
