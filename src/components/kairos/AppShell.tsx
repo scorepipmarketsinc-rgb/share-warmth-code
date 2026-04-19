@@ -20,6 +20,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const { navCollapsed, toggle } = useSidebarCollapse();
   const location = useLocation();
   const isAdmin = role === "admin";
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <div className="h-screen w-full flex bg-background overflow-hidden">
