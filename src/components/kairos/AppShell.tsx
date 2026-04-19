@@ -6,6 +6,7 @@ import { useSidebarCollapse } from "@/lib/sidebar-collapse";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import kairosLogo from "@/assets/kairos-logo.png";
 
 const NAV = [
   { to: "/", label: "Concierge", icon: MessageSquare },
@@ -29,9 +30,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       >
         <div className="px-5 pt-5 pb-4">
           <NavLink to="/" className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-xl bg-gradient-ink flex items-center justify-center shadow-soft">
-              <span className="font-display text-accent text-base">K</span>
-            </div>
+            <img src={kairosLogo} alt="KAIROS logo" className="w-9 h-9 object-contain drop-shadow-[0_2px_8px_hsl(var(--accent)/0.35)]" />
             <div>
               <div className="font-display text-base leading-none">KAIROS</div>
               <div className="text-[10px] tracking-[0.18em] text-muted-foreground">AI · CONCIERGE</div>
@@ -126,9 +125,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             </Button>
             {/* Mobile logo only */}
             <div className="md:hidden flex items-center gap-2">
-              <div className="w-8 h-8 rounded-xl bg-gradient-ink flex items-center justify-center">
-                <span className="font-display text-accent text-sm">K</span>
-              </div>
+              <img src={kairosLogo} alt="KAIROS logo" className="w-8 h-8 object-contain" />
               <span className="font-display">KAIROS AI</span>
             </div>
           </div>
