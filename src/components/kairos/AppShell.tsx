@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
-import { LayoutDashboard, MessageSquare, Compass, ShieldCheck, Plus, User, Wallet } from "lucide-react";
+import { LayoutDashboard, MessageSquare, Compass, ShieldCheck, Plus, User, Wallet, PanelLeft } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useApp } from "@/lib/store";
+import { useSidebarCollapse } from "@/lib/sidebar-collapse";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -14,13 +15,18 @@ const NAV = [
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const { role, setRole, wallet, addFunds } = useApp();
+  const { navCollapsed, toggle } = useSidebarCollapse();
   const location = useLocation();
   const isAdmin = role === "admin";
 
   return (
     <div className="h-screen w-full flex bg-background overflow-hidden">
       {/* Left rail */}
-      <aside className="hidden md:flex w-[240px] shrink-0 border-r border-sidebar-border bg-sidebar flex-col">
+      <motion.aside
+        animate={{ width: navCollapsed ? 0 : 240 }}
+        transition={{ type: "spring", stiffness: 260, damping: 32 }}
+        className="hidden md:flex shrink-0 border-r border-sidebar-border bg-sidebar flex-col overflow-hidden"
+      >
         <div className="px-5 pt-5 pb-4">
           <NavLink to="/" className="flex items-center gap-2">
             <div className="w-9 h-9 rounded-xl bg-gradient-ink flex items-center justify-center shadow-soft">
@@ -102,16 +108,27 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             </div>
           </div>
         </div>
-      </aside>
+      </motion.aside>
 
       {/* Main */}
       <div className="flex-1 flex flex-col min-w-0">
         <header className="h-16 px-4 md:px-8 flex items-center justify-between border-b border-border bg-background/80 backdrop-blur-md sticky top-0 z-20">
-          <div className="md:hidden flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-gradient-ink flex items-center justify-center">
-              <span className="font-display text-accent text-sm">K</span>
+          <div className="flex items-center gap-2">
+            <Button
+              size="icon"
+              variant="ghost"
+              onClick={toggle}
+              aria-label="Toggle sidebar"
+              className="h-9 w-9 rounded-lg hover:bg-muted"
+            >
+              <PanelLeft className="w-4 h-4" />
+            </Button>
+            <div className="md:hidden flex items-center gap-2">
+              <div className="w-8 h-8 rounded-xl bg-gradient-ink flex items-center justify-center">
+                <span className="font-display text-accent text-sm">K</span>
+              </div>
+              <span className="font-display">KAIROS AI</span>
             </div>
-            <span className="font-display">KAIROS AI</span>
           </div>
           <div className="hidden md:flex items-center gap-1 text-sm text-muted-foreground">
             <span className="font-display text-foreground capitalize">
