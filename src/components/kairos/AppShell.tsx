@@ -1,13 +1,11 @@
 import { motion } from "framer-motion";
-import { LayoutDashboard, MessageSquare, Compass, ShieldCheck, Plus, User, Wallet, PanelLeft, Menu, X } from "lucide-react";
+import { LayoutDashboard, MessageSquare, Compass, ShieldCheck, Plus, User, Wallet, PanelLeft } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useApp } from "@/lib/store";
 import { useSidebarCollapse } from "@/lib/sidebar-collapse";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-import { useState } from "react";
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 
 const NAV = [
   { to: "/", label: "Concierge", icon: MessageSquare },
