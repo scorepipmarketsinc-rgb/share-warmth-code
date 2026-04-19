@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUp, MessageSquare, Plus, Search, Sparkles } from "lucide-react";
 import { ChatMessage, Listing } from "@/lib/kairos-data";
 import { craftReply, findListings, parseQuery } from "@/lib/mock-ai";
 import { uid, useApp } from "@/lib/store";
+import { useSidebarCollapse } from "@/lib/sidebar-collapse";
 import { ChatBubble } from "@/components/kairos/ChatBubble";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -21,6 +22,7 @@ const Concierge = () => {
     conversations, activeId, setActiveId, newConversation, updateActive,
     createBooking,
   } = useApp();
+  const { listCollapsed } = useSidebarCollapse();
   const [input, setInput] = useState("");
   const [search, setSearch] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -99,44 +101,54 @@ const Concierge = () => {
   return (
     <div className="h-full flex">
       {/* Conversation list */}
-      <aside className="hidden lg:flex w-[260px] shrink-0 border-r border-border flex-col bg-background">
-        <div className="p-4 space-y-3">
-          <Button
-            onClick={() => newConversation()}
-            className="w-full justify-start rounded-xl bg-foreground text-background hover:bg-foreground/90"
+      <AnimatePresence initial={false}>
+        {!listCollapsed && (
+          <motion.aside
+            initial={{ width: 0, opacity: 0 }}
+            animate={{ width: 260, opacity: 1 }}
+            exit={{ width: 0, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 260, damping: 32 }}
+            className="hidden lg:flex shrink-0 border-r border-border flex-col bg-background overflow-hidden"
           >
-            <Plus className="w-4 h-4 mr-2" /> New chat
-          </Button>
-          <div className="relative">
-            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search conversations"
-              className="pl-9 rounded-xl"
-            />
-          </div>
-        </div>
-        <div className="flex-1 overflow-y-auto scrollbar-thin px-2 pb-3">
-          {filteredConvos.map((c) => (
-            <button
-              key={c.id}
-              onClick={() => setActiveId(c.id)}
-              className={`w-full text-left px-3 py-2.5 rounded-xl flex items-start gap-2 transition-colors ${
-                c.id === activeId ? "bg-muted" : "hover:bg-muted/60"
-              }`}
-            >
-              <MessageSquare className="w-4 h-4 mt-0.5 shrink-0 text-muted-foreground" />
-              <div className="min-w-0 flex-1">
-                <div className="text-sm truncate">{c.title}</div>
-                <div className="text-[10px] text-muted-foreground">
-                  {new Date(c.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
-                </div>
+            <div className="p-4 space-y-3 w-[260px]">
+              <Button
+                onClick={() => newConversation()}
+                className="w-full justify-start rounded-xl bg-foreground text-background hover:bg-foreground/90"
+              >
+                <Plus className="w-4 h-4 mr-2" /> New chat
+              </Button>
+              <div className="relative">
+                <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Search conversations"
+                  className="pl-9 rounded-xl"
+                />
               </div>
-            </button>
-          ))}
-        </div>
-      </aside>
+            </div>
+            <div className="flex-1 overflow-y-auto scrollbar-thin px-2 pb-3 w-[260px]">
+              {filteredConvos.map((c) => (
+                <button
+                  key={c.id}
+                  onClick={() => setActiveId(c.id)}
+                  className={`w-full text-left px-3 py-2.5 rounded-xl flex items-start gap-2 transition-colors ${
+                    c.id === activeId ? "bg-muted" : "hover:bg-muted/60"
+                  }`}
+                >
+                  <MessageSquare className="w-4 h-4 mt-0.5 shrink-0 text-muted-foreground" />
+                  <div className="min-w-0 flex-1">
+                    <div className="text-sm truncate">{c.title}</div>
+                    <div className="text-[10px] text-muted-foreground">
+                      {new Date(c.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </motion.aside>
+        )}
+      </AnimatePresence>
 
       {/* Chat */}
       <div className="flex-1 flex flex-col min-w-0">
