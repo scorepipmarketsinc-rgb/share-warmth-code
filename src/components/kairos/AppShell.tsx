@@ -117,15 +117,98 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <div className="flex-1 flex flex-col min-w-0">
         <header className="h-16 px-4 md:px-8 flex items-center justify-between border-b border-border bg-background/80 backdrop-blur-md sticky top-0 z-20">
           <div className="flex items-center gap-2">
+            {/* Desktop sidebar toggle */}
             <Button
               size="icon"
               variant="ghost"
               onClick={toggle}
               aria-label="Toggle sidebar"
-              className="h-9 w-9 rounded-lg hover:bg-muted"
+              className="hidden md:flex h-9 w-9 rounded-lg hover:bg-muted"
             >
               <PanelLeft className="w-4 h-4" />
             </Button>
+            {/* Mobile hamburger menu */}
+            <Drawer open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+              <DrawerTrigger asChild>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  aria-label="Open menu"
+                  className="md:hidden h-9 w-9 rounded-lg hover:bg-muted"
+                >
+                  <Menu className="w-5 h-5" />
+                </Button>
+              </DrawerTrigger>
+              <DrawerContent className="h-[85vh]">
+                <DrawerHeader className="border-b border-border pb-4">
+                  <div className="flex items-center justify-between">
+                    <DrawerTitle className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-xl bg-gradient-ink flex items-center justify-center">
+                        <span className="font-display text-accent text-sm">K</span>
+                      </div>
+                      <span className="font-display">KAIROS AI</span>
+                    </DrawerTitle>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="h-8 w-8 rounded-lg"
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </DrawerHeader>
+                <nav className="p-4 space-y-1">
+                  {NAV.map(({ to, label, icon: Icon }) => (
+                    <NavLink
+                      key={to}
+                      to={to}
+                      end={to === "/"}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={({ isActive }) =>
+                        cn(
+                          "flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition-colors",
+                          isActive
+                            ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                            : "text-sidebar-foreground hover:bg-sidebar-accent/60"
+                        )
+                      }
+                    >
+                      <Icon className="w-5 h-5" />
+                      {label}
+                    </NavLink>
+                  ))}
+                  {isAdmin && (
+                    <NavLink
+                      to="/admin"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={({ isActive }) =>
+                        cn(
+                          "flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition-colors",
+                          isActive
+                            ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                            : "text-sidebar-foreground hover:bg-sidebar-accent/60"
+                        )
+                      }
+                    >
+                      <ShieldCheck className="w-5 h-5" />
+                      Admin
+                    </NavLink>
+                  )}
+                </nav>
+                <div className="mt-auto p-4 border-t border-border">
+                  <div className="flex items-center gap-3 px-2 py-2">
+                    <div className="w-10 h-10 rounded-full bg-gradient-gold flex items-center justify-center">
+                      <User className="w-5 h-5 text-accent-foreground" />
+                    </div>
+                    <div>
+                      <div className="font-medium text-sm">Alex Mwangi</div>
+                      <div className="text-xs text-muted-foreground capitalize">{role}</div>
+                    </div>
+                  </div>
+                </div>
+              </DrawerContent>
+            </Drawer>
             <div className="md:hidden flex items-center gap-2">
               <div className="w-8 h-8 rounded-xl bg-gradient-ink flex items-center justify-center">
                 <span className="font-display text-accent text-sm">K</span>
