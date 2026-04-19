@@ -114,15 +114,17 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <div className="flex-1 flex flex-col min-w-0">
         <header className="h-16 px-4 md:px-8 flex items-center justify-between border-b border-border bg-background/80 backdrop-blur-md sticky top-0 z-20">
           <div className="flex items-center gap-2">
+            {/* Desktop sidebar toggle */}
             <Button
               size="icon"
               variant="ghost"
               onClick={toggle}
               aria-label="Toggle sidebar"
-              className="h-9 w-9 rounded-lg hover:bg-muted"
+              className="hidden md:flex h-9 w-9 rounded-lg hover:bg-muted"
             >
               <PanelLeft className="w-4 h-4" />
             </Button>
+            {/* Mobile logo only */}
             <div className="md:hidden flex items-center gap-2">
               <div className="w-8 h-8 rounded-xl bg-gradient-ink flex items-center justify-center">
                 <span className="font-display text-accent text-sm">K</span>
