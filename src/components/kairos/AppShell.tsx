@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { LayoutDashboard, MessageSquare, Compass, ShieldCheck, Plus, User, Wallet, PanelLeft } from "lucide-react";
+import { LayoutDashboard, MessageSquare, Compass, ShieldCheck, Plus, User, Wallet, PanelLeft, Sparkles } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useApp } from "@/lib/store";
 import { useSidebarCollapse } from "@/lib/sidebar-collapse";
@@ -10,6 +10,7 @@ import kairosLogo from "@/assets/kairos-logo.png";
 
 const NAV = [
   { to: "/", label: "Concierge", icon: MessageSquare },
+  { to: "/kairos", label: "Kairos AI", icon: Sparkles },
   { to: "/discover", label: "Discover", icon: Compass },
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
 ];

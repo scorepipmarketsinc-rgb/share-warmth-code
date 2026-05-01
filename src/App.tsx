@@ -7,6 +7,7 @@ import { AppProvider } from "@/lib/store";
 import { SidebarCollapseProvider } from "@/lib/sidebar-collapse";
 import { AppShell } from "@/components/kairos/AppShell";
 import Concierge from "./pages/Concierge";
+import Kairos from "./pages/Kairos";
 import Discover from "./pages/Discover";
 import ListingDetail from "./pages/ListingDetail";
 import Dashboard from "./pages/Dashboard";
@@ -26,6 +27,7 @@ const App = () => (
           <AppShell>
             <Routes>
               <Route path="/" element={<Concierge />} />
+              <Route path="/kairos" element={<Kairos />} />
               <Route path="/discover" element={<Discover />} />
               <Route path="/listing/:id" element={<ListingDetail />} />
               <Route path="/dashboard" element={<Dashboard />} />
