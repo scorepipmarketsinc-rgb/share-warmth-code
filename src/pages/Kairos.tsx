@@ -228,7 +228,7 @@ const Kairos = () => {
           </div>
         </div>
 
-        <div className="px-6 py-4 border-t border-border bg-background">
+        <div className="px-4 md:px-6 py-3 md:py-4 border-t border-border bg-background">
           <div className="max-w-2xl mx-auto relative rounded-2xl border border-border bg-card shadow-soft focus-within:shadow-elevated transition-shadow">
             <Textarea
               value={input}
@@ -254,16 +254,26 @@ const Kairos = () => {
         </div>
       </div>
 
-      {/* RIGHT — Dynamic results panel */}
-      <div className="hidden md:flex w-[480px] lg:w-[540px] xl:w-[600px] shrink-0 flex-col bg-gradient-to-b from-background via-background to-muted/30 relative overflow-hidden">
-        {/* futuristic backdrop */}
-        <div className="pointer-events-none absolute inset-0 opacity-60">
-          <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-accent/10 blur-3xl" />
-          <div className="absolute bottom-0 -left-20 w-80 h-80 rounded-full bg-primary/5 blur-3xl" />
-        </div>
+      {/* Mobile floating workspace pill (only when sheet is closed and there's content) */}
+      {stage !== "idle" && !mobileOpen && (
+        <motion.button
+          initial={{ y: 60, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          onClick={() => setMobileOpen(true)}
+          className="md:hidden fixed bottom-24 right-4 z-30 flex items-center gap-2 px-4 py-2.5 rounded-full bg-gradient-gold text-accent-foreground shadow-gold font-medium text-sm"
+        >
+          <LayoutPanelLeft className="w-4 h-4" />
+          Open workspace
+          <span className="ml-1 px-1.5 py-0.5 rounded-full bg-background/30 text-[10px] uppercase tracking-wider">
+            {stage}
+          </span>
+        </motion.button>
+      )}
 
-        <div className="px-6 py-4 border-b border-border flex items-center justify-between relative">
-          <div>
+      {/* RIGHT — Dynamic results panel (desktop side / mobile bottom sheet) */}
+      <ResponsivePanel mobileOpen={mobileOpen} onMobileClose={() => setMobileOpen(false)}>
+        <div className="px-5 md:px-6 py-3 md:py-4 border-b border-border flex items-center justify-between relative">
+          <div className="min-w-0">
             <div className="font-display text-sm leading-none">Live Workspace</div>
             <div className="text-[10px] tracking-[0.18em] uppercase text-muted-foreground mt-1">
               {stage === "idle" && "Awaiting query"}
@@ -274,7 +284,16 @@ const Kairos = () => {
               {stage === "receipt" && "Confirmed"}
             </div>
           </div>
-          <StageIndicator stage={stage} />
+          <div className="flex items-center gap-3">
+            <StageIndicator stage={stage} />
+            <button
+              onClick={() => setMobileOpen(false)}
+              className="md:hidden h-8 w-8 rounded-lg flex items-center justify-center hover:bg-muted"
+              aria-label="Close workspace"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
         </div>
 
         <div className="flex-1 overflow-y-auto scrollbar-thin relative">
