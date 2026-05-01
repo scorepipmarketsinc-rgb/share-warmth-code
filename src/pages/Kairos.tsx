@@ -142,27 +142,27 @@ const Kairos = () => {
   };
 
   return (
-    <div className="h-full flex bg-background">
+    <div className="h-full flex bg-background relative">
       {/* LEFT — Chat */}
-      <div className="flex-1 flex flex-col min-w-0 border-r border-border">
-        <div className="px-6 py-4 border-b border-border flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-gold flex items-center justify-center shadow-gold">
+      <div className="flex-1 flex flex-col min-w-0 md:border-r border-border">
+        <div className="px-4 md:px-6 py-3 md:py-4 border-b border-border flex items-center gap-2">
+          <div className="w-8 h-8 rounded-lg bg-gradient-gold flex items-center justify-center shadow-gold shrink-0">
             <Sparkles className="w-4 h-4 text-accent-foreground" />
           </div>
-          <div>
-            <div className="font-display text-sm leading-none">Kairos Transaction Assistant</div>
+          <div className="min-w-0">
+            <div className="font-display text-sm leading-none truncate">Kairos Transaction Assistant</div>
             <div className="text-[10px] tracking-[0.18em] uppercase text-muted-foreground mt-1">
               Search · Book · Pay
             </div>
           </div>
-          <div className="ml-auto flex items-center gap-1.5 text-[10px] text-muted-foreground">
+          <div className="ml-auto flex items-center gap-1.5 text-[10px] text-muted-foreground shrink-0">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
             Live
           </div>
         </div>
 
         <div ref={scrollRef} className="flex-1 overflow-y-auto scrollbar-thin">
-          <div className="max-w-2xl mx-auto px-6 py-6 space-y-4">
+          <div className="max-w-2xl mx-auto px-4 md:px-6 py-4 md:py-6 space-y-4 pb-6">
             {messages.map((m) => (
               <motion.div
                 key={m.id}
