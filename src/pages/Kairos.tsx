@@ -50,6 +50,11 @@ const Kairos = () => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages.length, thinking]);
 
+  // Auto-open mobile workspace sheet whenever the stage advances
+  useEffect(() => {
+    if (stage !== "idle") setMobileOpen(true);
+  }, [stage]);
+
   const total = useMemo(() => (selected ? selected.price * nights : 0), [selected, nights]);
 
   const send = (text: string) => {
