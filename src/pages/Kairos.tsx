@@ -385,7 +385,7 @@ const Kairos = () => {
             )}
           </AnimatePresence>
         </div>
-      </div>
+      </ResponsivePanel>
     </div>
   );
 };
