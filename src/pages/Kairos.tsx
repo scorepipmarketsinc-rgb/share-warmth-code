@@ -707,4 +707,62 @@ function Row({ label, value, muted }: { label: string; value: string; muted?: bo
   );
 }
 
+/* Desktop side panel + mobile bottom sheet wrapper */
+function ResponsivePanel({
+  mobileOpen, onMobileClose, children,
+}: { mobileOpen: boolean; onMobileClose: () => void; children: React.ReactNode }) {
+  return (
+    <>
+      {/* Desktop side panel */}
+      <div className="hidden md:flex w-[440px] lg:w-[520px] xl:w-[600px] shrink-0 flex-col bg-gradient-to-b from-background via-background to-muted/30 relative overflow-hidden">
+        <div className="pointer-events-none absolute inset-0 opacity-60">
+          <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-accent/10 blur-3xl" />
+          <div className="absolute bottom-0 -left-20 w-80 h-80 rounded-full bg-primary/5 blur-3xl" />
+        </div>
+        {children}
+      </div>
+
+      {/* Mobile bottom sheet */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={onMobileClose}
+              className="md:hidden fixed inset-0 bg-foreground/40 backdrop-blur-sm z-40"
+            />
+            <motion.div
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", stiffness: 320, damping: 34 }}
+              drag="y"
+              dragConstraints={{ top: 0, bottom: 0 }}
+              dragElastic={{ top: 0, bottom: 0.4 }}
+              onDragEnd={(_, info) => {
+                if (info.offset.y > 120) onMobileClose();
+              }}
+              className="md:hidden fixed inset-x-0 bottom-0 z-50 h-[88vh] rounded-t-3xl bg-background shadow-elevated flex flex-col overflow-hidden border-t border-border"
+            >
+              {/* drag handle */}
+              <div className="pt-2 pb-1 flex justify-center shrink-0">
+                <div className="w-10 h-1 rounded-full bg-muted-foreground/30" />
+              </div>
+              <div className="pointer-events-none absolute inset-0 opacity-60">
+                <div className="absolute -top-32 -right-32 w-72 h-72 rounded-full bg-accent/10 blur-3xl" />
+                <div className="absolute bottom-0 -left-20 w-60 h-60 rounded-full bg-primary/5 blur-3xl" />
+              </div>
+              <div className="flex-1 flex flex-col min-h-0 relative">
+                {children}
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </>
+  );
+}
+
 export default Kairos;
