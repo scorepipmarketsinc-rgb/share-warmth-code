@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowUp, Sparkles, MapPin, Star, Check, CreditCard, Loader2,
-  Receipt, ExternalLink, Calendar, ChevronLeft, Lock, ShieldCheck,
+  Receipt, ExternalLink, Calendar, ChevronLeft, Lock, ShieldCheck, X, LayoutPanelLeft,
 } from "lucide-react";
 import { Listing } from "@/lib/kairos-data";
 import { craftReply, findListings, parseQuery } from "@/lib/mock-ai";
@@ -43,11 +43,17 @@ const Kairos = () => {
   const [nights, setNights] = useState(3);
   const [bookingId, setBookingId] = useState<string | null>(null);
   const [card, setCard] = useState({ name: "Alex Mwangi", number: "4242 4242 4242 4242", exp: "12/27", cvc: "123" });
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages.length, thinking]);
+
+  // Auto-open mobile workspace sheet whenever the stage advances
+  useEffect(() => {
+    if (stage !== "idle") setMobileOpen(true);
+  }, [stage]);
 
   const total = useMemo(() => (selected ? selected.price * nights : 0), [selected, nights]);
 
@@ -136,27 +142,27 @@ const Kairos = () => {
   };
 
   return (
-    <div className="h-full flex bg-background">
+    <div className="h-full flex bg-background relative">
       {/* LEFT — Chat */}
-      <div className="flex-1 flex flex-col min-w-0 border-r border-border">
-        <div className="px-6 py-4 border-b border-border flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-gold flex items-center justify-center shadow-gold">
+      <div className="flex-1 flex flex-col min-w-0 md:border-r border-border">
+        <div className="px-4 md:px-6 py-3 md:py-4 border-b border-border flex items-center gap-2">
+          <div className="w-8 h-8 rounded-lg bg-gradient-gold flex items-center justify-center shadow-gold shrink-0">
             <Sparkles className="w-4 h-4 text-accent-foreground" />
           </div>
-          <div>
-            <div className="font-display text-sm leading-none">Kairos Transaction Assistant</div>
+          <div className="min-w-0">
+            <div className="font-display text-sm leading-none truncate">Kairos Transaction Assistant</div>
             <div className="text-[10px] tracking-[0.18em] uppercase text-muted-foreground mt-1">
               Search · Book · Pay
             </div>
           </div>
-          <div className="ml-auto flex items-center gap-1.5 text-[10px] text-muted-foreground">
+          <div className="ml-auto flex items-center gap-1.5 text-[10px] text-muted-foreground shrink-0">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
             Live
           </div>
         </div>
 
         <div ref={scrollRef} className="flex-1 overflow-y-auto scrollbar-thin">
-          <div className="max-w-2xl mx-auto px-6 py-6 space-y-4">
+          <div className="max-w-2xl mx-auto px-4 md:px-6 py-4 md:py-6 space-y-4 pb-6">
             {messages.map((m) => (
               <motion.div
                 key={m.id}
@@ -222,7 +228,7 @@ const Kairos = () => {
           </div>
         </div>
 
-        <div className="px-6 py-4 border-t border-border bg-background">
+        <div className="px-4 md:px-6 py-3 md:py-4 border-t border-border bg-background">
           <div className="max-w-2xl mx-auto relative rounded-2xl border border-border bg-card shadow-soft focus-within:shadow-elevated transition-shadow">
             <Textarea
               value={input}
@@ -248,16 +254,26 @@ const Kairos = () => {
         </div>
       </div>
 
-      {/* RIGHT — Dynamic results panel */}
-      <div className="hidden md:flex w-[480px] lg:w-[540px] xl:w-[600px] shrink-0 flex-col bg-gradient-to-b from-background via-background to-muted/30 relative overflow-hidden">
-        {/* futuristic backdrop */}
-        <div className="pointer-events-none absolute inset-0 opacity-60">
-          <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-accent/10 blur-3xl" />
-          <div className="absolute bottom-0 -left-20 w-80 h-80 rounded-full bg-primary/5 blur-3xl" />
-        </div>
+      {/* Mobile floating workspace pill (only when sheet is closed and there's content) */}
+      {stage !== "idle" && !mobileOpen && (
+        <motion.button
+          initial={{ y: 60, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          onClick={() => setMobileOpen(true)}
+          className="md:hidden fixed bottom-24 right-4 z-30 flex items-center gap-2 px-4 py-2.5 rounded-full bg-gradient-gold text-accent-foreground shadow-gold font-medium text-sm"
+        >
+          <LayoutPanelLeft className="w-4 h-4" />
+          Open workspace
+          <span className="ml-1 px-1.5 py-0.5 rounded-full bg-background/30 text-[10px] uppercase tracking-wider">
+            {stage}
+          </span>
+        </motion.button>
+      )}
 
-        <div className="px-6 py-4 border-b border-border flex items-center justify-between relative">
-          <div>
+      {/* RIGHT — Dynamic results panel (desktop side / mobile bottom sheet) */}
+      <ResponsivePanel mobileOpen={mobileOpen} onMobileClose={() => setMobileOpen(false)}>
+        <div className="px-5 md:px-6 py-3 md:py-4 border-b border-border flex items-center justify-between relative">
+          <div className="min-w-0">
             <div className="font-display text-sm leading-none">Live Workspace</div>
             <div className="text-[10px] tracking-[0.18em] uppercase text-muted-foreground mt-1">
               {stage === "idle" && "Awaiting query"}
@@ -268,7 +284,16 @@ const Kairos = () => {
               {stage === "receipt" && "Confirmed"}
             </div>
           </div>
-          <StageIndicator stage={stage} />
+          <div className="flex items-center gap-3">
+            <StageIndicator stage={stage} />
+            <button
+              onClick={() => setMobileOpen(false)}
+              className="md:hidden h-8 w-8 rounded-lg flex items-center justify-center hover:bg-muted"
+              aria-label="Close workspace"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
         </div>
 
         <div className="flex-1 overflow-y-auto scrollbar-thin relative">
@@ -360,7 +385,7 @@ const Kairos = () => {
             )}
           </AnimatePresence>
         </div>
-      </div>
+      </ResponsivePanel>
     </div>
   );
 };
@@ -679,6 +704,64 @@ function Row({ label, value, muted }: { label: string; value: string; muted?: bo
       <div className={cn("text-sm", muted ? "text-muted-foreground" : "")}>{label}</div>
       <div className={cn("text-sm tabular-nums", muted ? "text-muted-foreground" : "font-medium")}>{value}</div>
     </div>
+  );
+}
+
+/* Desktop side panel + mobile bottom sheet wrapper */
+function ResponsivePanel({
+  mobileOpen, onMobileClose, children,
+}: { mobileOpen: boolean; onMobileClose: () => void; children: React.ReactNode }) {
+  return (
+    <>
+      {/* Desktop side panel */}
+      <div className="hidden md:flex w-[440px] lg:w-[520px] xl:w-[600px] shrink-0 flex-col bg-gradient-to-b from-background via-background to-muted/30 relative overflow-hidden">
+        <div className="pointer-events-none absolute inset-0 opacity-60">
+          <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-accent/10 blur-3xl" />
+          <div className="absolute bottom-0 -left-20 w-80 h-80 rounded-full bg-primary/5 blur-3xl" />
+        </div>
+        {children}
+      </div>
+
+      {/* Mobile bottom sheet */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={onMobileClose}
+              className="md:hidden fixed inset-0 bg-foreground/40 backdrop-blur-sm z-40"
+            />
+            <motion.div
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", stiffness: 320, damping: 34 }}
+              drag="y"
+              dragConstraints={{ top: 0, bottom: 0 }}
+              dragElastic={{ top: 0, bottom: 0.4 }}
+              onDragEnd={(_, info) => {
+                if (info.offset.y > 120) onMobileClose();
+              }}
+              className="md:hidden fixed inset-x-0 bottom-0 z-50 h-[88vh] rounded-t-3xl bg-background shadow-elevated flex flex-col overflow-hidden border-t border-border"
+            >
+              {/* drag handle */}
+              <div className="pt-2 pb-1 flex justify-center shrink-0">
+                <div className="w-10 h-1 rounded-full bg-muted-foreground/30" />
+              </div>
+              <div className="pointer-events-none absolute inset-0 opacity-60">
+                <div className="absolute -top-32 -right-32 w-72 h-72 rounded-full bg-accent/10 blur-3xl" />
+                <div className="absolute bottom-0 -left-20 w-60 h-60 rounded-full bg-primary/5 blur-3xl" />
+              </div>
+              <div className="flex-1 flex flex-col min-h-0 relative">
+                {children}
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
 
