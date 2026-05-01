@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowUp, Sparkles, MapPin, Star, Check, CreditCard, Loader2,
-  Receipt, ExternalLink, Calendar, ChevronLeft, Lock, ShieldCheck,
+  Receipt, ExternalLink, Calendar, ChevronLeft, Lock, ShieldCheck, X, LayoutPanelLeft,
 } from "lucide-react";
 import { Listing } from "@/lib/kairos-data";
 import { craftReply, findListings, parseQuery } from "@/lib/mock-ai";
