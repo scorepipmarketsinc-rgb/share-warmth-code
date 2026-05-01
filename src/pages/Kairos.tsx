@@ -43,6 +43,7 @@ const Kairos = () => {
   const [nights, setNights] = useState(3);
   const [bookingId, setBookingId] = useState<string | null>(null);
   const [card, setCard] = useState({ name: "Alex Mwangi", number: "4242 4242 4242 4242", exp: "12/27", cvc: "123" });
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
