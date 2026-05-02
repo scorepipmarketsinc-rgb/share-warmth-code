@@ -12,6 +12,8 @@ import Discover from "./pages/Discover";
 import ListingDetail from "./pages/ListingDetail";
 import Dashboard from "./pages/Dashboard";
 import Admin from "./pages/Admin";
+import Agent from "./pages/Agent";
+import Finance from "./pages/Finance";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,6 +34,8 @@ const App = () => (
               <Route path="/listing/:id" element={<ListingDetail />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/admin" element={<Admin />} />
+              <Route path="/admin/finance" element={<Finance />} />
+              <Route path="/agent" element={<Agent />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </AppShell>
