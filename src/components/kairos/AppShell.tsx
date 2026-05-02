@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { LayoutDashboard, MessageSquare, Compass, ShieldCheck, Plus, User, Wallet, PanelLeft, Sparkles } from "lucide-react";
+import { LayoutDashboard, MessageSquare, Compass, ShieldCheck, Plus, User, Wallet, PanelLeft, Sparkles, Menu, Briefcase, BarChart3 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useApp } from "@/lib/store";
 import { useSidebarCollapse } from "@/lib/sidebar-collapse";
 import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import kairosLogo from "@/assets/kairos-logo.png";
@@ -13,6 +15,12 @@ const NAV = [
   { to: "/kairos", label: "Kairos AI", icon: Sparkles },
   { to: "/discover", label: "Discover", icon: Compass },
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+];
+
+const AGENT_NAV = { to: "/agent", label: "Agent Hub", icon: Briefcase };
+const ADMIN_NAV = [
+  { to: "/admin", label: "Admin", icon: ShieldCheck },
+  { to: "/admin/finance", label: "Finance", icon: BarChart3 },
 ];
 
 export function AppShell({ children }: { children: React.ReactNode }) {
