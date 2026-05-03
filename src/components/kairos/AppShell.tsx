@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { LayoutDashboard, MessageSquare, Compass, ShieldCheck, Plus, User, Wallet, PanelLeft, Sparkles, Menu, Briefcase, BarChart3 } from "lucide-react";
+import { LayoutDashboard, MessageSquare, Compass, ShieldCheck, Plus, User, Wallet, PanelLeft, Sparkles, Menu, Briefcase, BarChart3, Plane, Receipt, Mail } from "lucide-react";
+import { NotificationBell } from "@/components/kairos/NotificationBell";
+import { SiteFooter } from "@/components/kairos/SiteFooter";
 import { NavLink, useLocation } from "react-router-dom";
 import { useApp } from "@/lib/store";
 import { useSidebarCollapse } from "@/lib/sidebar-collapse";
@@ -14,13 +16,16 @@ const NAV = [
   { to: "/", label: "Concierge", icon: MessageSquare },
   { to: "/kairos", label: "Kairos AI", icon: Sparkles },
   { to: "/discover", label: "Discover", icon: Compass },
+  { to: "/travel", label: "Travel", icon: Plane },
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
 ];
 
 const AGENT_NAV = { to: "/agent", label: "Agent Hub", icon: Briefcase };
 const ADMIN_NAV = [
   { to: "/admin", label: "Admin", icon: ShieldCheck },
+  { to: "/admin/bookings", label: "Bookings", icon: Receipt },
   { to: "/admin/finance", label: "Finance", icon: BarChart3 },
+  { to: "/admin/newsletter", label: "Newsletter", icon: Mail },
 ];
 
 function NavBody({
@@ -175,6 +180,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             </span>
           </div>
           <div className="flex items-center gap-2">
+            <NotificationBell />
             <motion.div
               key={wallet}
               initial={{ scale: 1.08 }}
@@ -195,7 +201,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto scrollbar-thin">{children}</main>
+        <main className="flex-1 overflow-y-auto scrollbar-thin">
+          {children}
+          <SiteFooter />
+        </main>
       </div>
     </div>
   );
