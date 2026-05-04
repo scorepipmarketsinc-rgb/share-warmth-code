@@ -17,6 +17,7 @@ import Finance from "./pages/Finance";
 import AdminBookings from "./pages/AdminBookings";
 import AdminNewsletter from "./pages/AdminNewsletter";
 import Travel from "./pages/Travel";
+import Checkout from "./pages/Checkout";
 import { Login, Register } from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -31,6 +32,7 @@ const ShellRoutes = () => {
       <Route path="/kairos" element={<Kairos />} />
       <Route path="/discover" element={<Discover />} />
       <Route path="/travel" element={<Travel />} />
+      <Route path="/checkout" element={<Checkout />} />
       <Route path="/listing/:id" element={<ListingDetail />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/admin" element={<Admin />} />
