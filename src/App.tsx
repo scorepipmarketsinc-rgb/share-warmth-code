@@ -18,6 +18,8 @@ import AdminBookings from "./pages/AdminBookings";
 import AdminNewsletter from "./pages/AdminNewsletter";
 import Travel from "./pages/Travel";
 import Checkout from "./pages/Checkout";
+import Kyc from "./pages/Kyc";
+import AdminKyc from "./pages/AdminKyc";
 import { Login, Register } from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -35,6 +37,8 @@ const ShellRoutes = () => {
       <Route path="/checkout" element={<Checkout />} />
       <Route path="/listing/:id" element={<ListingDetail />} />
       <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/kyc" element={<Kyc />} />
+      <Route path="/admin/kyc" element={<AdminKyc />} />
       <Route path="/admin" element={<Admin />} />
       <Route path="/admin/finance" element={<Finance />} />
       <Route path="/admin/bookings" element={<AdminBookings />} />

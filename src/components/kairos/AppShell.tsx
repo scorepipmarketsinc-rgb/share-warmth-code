@@ -18,11 +18,13 @@ const NAV = [
   { to: "/discover", label: "Discover", icon: Compass },
   { to: "/travel", label: "Travel", icon: Plane },
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/kyc", label: "Verification", icon: ShieldCheck },
 ];
 
 const AGENT_NAV = { to: "/agent", label: "Agent Hub", icon: Briefcase };
 const ADMIN_NAV = [
   { to: "/admin", label: "Admin", icon: ShieldCheck },
+  { to: "/admin/kyc", label: "KYC Reviews", icon: ShieldCheck },
   { to: "/admin/bookings", label: "Bookings", icon: Receipt },
   { to: "/admin/finance", label: "Finance", icon: BarChart3 },
   { to: "/admin/newsletter", label: "Newsletter", icon: Mail },
