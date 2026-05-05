@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { LayoutDashboard, MessageSquare, Compass, ShieldCheck, Plus, User, Wallet, PanelLeft, Sparkles, Menu, Briefcase, BarChart3, Plane, Receipt, Mail } from "lucide-react";
+import { LayoutDashboard, MessageSquare, Compass, ShieldCheck, Plus, User, Wallet, PanelLeft, Sparkles, Menu, Briefcase, BarChart3, Plane, Receipt, Mail, Building2, CheckCircle2 } from "lucide-react";
 import { NotificationBell } from "@/components/kairos/NotificationBell";
 import { SiteFooter } from "@/components/kairos/SiteFooter";
 import { NavLink, useLocation } from "react-router-dom";
@@ -18,12 +18,17 @@ const NAV = [
   { to: "/discover", label: "Discover", icon: Compass },
   { to: "/travel", label: "Travel", icon: Plane },
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/list", label: "List a service", icon: Plus },
   { to: "/kyc", label: "Verification", icon: ShieldCheck },
 ];
 
-const AGENT_NAV = { to: "/agent", label: "Agent Hub", icon: Briefcase };
+const AGENT_NAV = [
+  { to: "/agent", label: "Agent Hub", icon: Briefcase },
+  { to: "/agent/listings", label: "My Listings", icon: Building2 },
+];
 const ADMIN_NAV = [
   { to: "/admin", label: "Admin", icon: ShieldCheck },
+  { to: "/admin/approvals", label: "Approvals", icon: CheckCircle2 },
   { to: "/admin/kyc", label: "KYC Reviews", icon: ShieldCheck },
   { to: "/admin/bookings", label: "Bookings", icon: Receipt },
   { to: "/admin/finance", label: "Finance", icon: BarChart3 },
@@ -43,7 +48,7 @@ function NavBody({
 }) {
   const links = [
     ...NAV,
-    ...(role === "agent" || isAdmin ? [AGENT_NAV] : []),
+    ...(role === "agent" || isAdmin ? AGENT_NAV : []),
     ...(isAdmin ? ADMIN_NAV : []),
   ];
   return (

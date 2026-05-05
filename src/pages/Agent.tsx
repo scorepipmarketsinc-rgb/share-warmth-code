@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   Briefcase,
@@ -79,6 +80,7 @@ const StatusPill = ({ status }: { status: ListingStatus }) => {
 };
 
 const Agent = () => {
+  const navigate = useNavigate();
   // mock "my listings" — slice subset
   const myListings = useMemo(
     () =>
@@ -154,8 +156,8 @@ const Agent = () => {
           <h1 className="font-display text-2xl md:text-4xl mt-1">Your business, at a glance</h1>
           <p className="text-sm text-muted-foreground mt-1">Manage listings, track bookings, watch earnings grow.</p>
         </div>
-        <Button className="rounded-full bg-foreground text-background hover:bg-foreground/90">
-          <Plus className="w-4 h-4 mr-1" /> New listing
+        <Button asChild className="rounded-full bg-foreground text-background hover:bg-foreground/90">
+          <Link to="/list"><Plus className="w-4 h-4 mr-1" /> New listing</Link>
         </Button>
       </div>
 
@@ -177,7 +179,7 @@ const Agent = () => {
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.04 }}
-              onClick={() => toast.success(`Start new ${t.label}`, { description: "Listing wizard coming up." })}
+              onClick={() => navigate(`/list/${t.key}`)}
               className="group relative overflow-hidden rounded-2xl border border-border bg-card p-4 text-left hover:border-accent transition-all"
             >
               <div className={cn("w-10 h-10 rounded-xl bg-gradient-to-br flex items-center justify-center text-white shadow-soft", t.gradient)}>
