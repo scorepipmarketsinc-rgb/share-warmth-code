@@ -19,7 +19,17 @@ import AdminNewsletter from "./pages/AdminNewsletter";
 import Travel from "./pages/Travel";
 import Checkout from "./pages/Checkout";
 import Kyc from "./pages/Kyc";
+import Kyb from "./pages/Kyb";
 import AdminKyc from "./pages/AdminKyc";
+import AdminApprovals from "./pages/AdminApprovals";
+import AgentListings from "./pages/AgentListings";
+import ListIndex from "./pages/list/ListIndex";
+import ListProperty from "./pages/list/ListProperty";
+import ListHotel from "./pages/list/ListHotel";
+import ListExperience from "./pages/list/ListExperience";
+import ListLifestyle from "./pages/list/ListLifestyle";
+import ListTravel from "./pages/list/ListTravel";
+import ListSuccess from "./pages/list/ListSuccess";
 import { Login, Register } from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -38,6 +48,16 @@ const ShellRoutes = () => {
       <Route path="/listing/:id" element={<ListingDetail />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/kyc" element={<Kyc />} />
+      <Route path="/kyb" element={<Kyb />} />
+      <Route path="/list" element={<ListIndex />} />
+      <Route path="/list/property" element={<ListProperty />} />
+      <Route path="/list/hotel" element={<ListHotel />} />
+      <Route path="/list/experience" element={<ListExperience />} />
+      <Route path="/list/lifestyle" element={<ListLifestyle />} />
+      <Route path="/list/travel" element={<ListTravel />} />
+      <Route path="/list/success" element={<ListSuccess />} />
+      <Route path="/agent/listings" element={<AgentListings />} />
+      <Route path="/admin/approvals" element={<AdminApprovals />} />
       <Route path="/admin/kyc" element={<AdminKyc />} />
       <Route path="/admin" element={<Admin />} />
       <Route path="/admin/finance" element={<Finance />} />
