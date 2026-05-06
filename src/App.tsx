@@ -32,6 +32,7 @@ import ListTravel from "./pages/list/ListTravel";
 import ListSuccess from "./pages/list/ListSuccess";
 import { Login, Register } from "./pages/Auth";
 import NotFound from "./pages/NotFound";
+import { RequireAuth } from "./components/RequireAuth";
 
 const queryClient = new QueryClient();
 
@@ -40,7 +41,7 @@ const ShellRoutes = () => {
   const bare = pathname === "/login" || pathname === "/register";
   const inner = (
     <Routes>
-      <Route path="/" element={<Concierge />} />
+      <Route path="/" element={<RequireAuth><Concierge /></RequireAuth>} />
       <Route path="/kairos" element={<Kairos />} />
       <Route path="/discover" element={<Discover />} />
       <Route path="/travel" element={<Travel />} />
