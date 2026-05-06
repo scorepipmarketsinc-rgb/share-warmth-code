@@ -37,6 +37,36 @@ export async function getMyKyb(userId: string): Promise<KybSubmission | null> {
   }
 }
 
+export async function listKyb(): Promise<KybSubmission[]> {
+  try {
+    return await apiFetch<KybSubmission[]>("/admin/kyb");
+  } catch {
+    return localDb
+      .read<KybSubmission[]>(KEY, [])
+      .sort((a, b) => +new Date(b.submittedAt) - +new Date(a.submittedAt));
+  }
+}
+
+export async function reviewKyb(
+  id: string,
+  status: "verified" | "rejected",
+  notes?: string
+): Promise<KybSubmission | null> {
+  try {
+    return await apiFetch<KybSubmission>(`/admin/kyb/${id}/${status}`, {
+      method: "PATCH",
+      body: JSON.stringify({ notes }),
+    });
+  } catch {
+    const list = localDb.read<KybSubmission[]>(KEY, []);
+    const idx = list.findIndex((k) => k.id === id);
+    if (idx === -1) return null;
+    list[idx] = { ...list[idx], status, notes, reviewedAt: new Date().toISOString() };
+    localDb.write(KEY, list);
+    return list[idx];
+  }
+}
+
 export async function submitKyb(
   payload: Omit<KybSubmission, "id" | "status" | "submittedAt">
 ): Promise<KybSubmission> {
