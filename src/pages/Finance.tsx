@@ -115,6 +115,12 @@ const Finance = () => {
     return { total, fees, payouts, monthlyMap, thisMonth };
   }, [transactions]);
 
+  const methodSplit = useMemo(() => {
+    const map: Record<string, number> = { card: 0, wallet: 0, transfer: 0 };
+    transactions.forEach((t) => (map[t.method] += t.amount));
+    return Object.entries(map).map(([name, value]) => ({ name, value }));
+  }, [transactions]);
+
   const maxM = Math.max(...totals.monthlyMap, 1);
 
   const exportCsv = () => {
