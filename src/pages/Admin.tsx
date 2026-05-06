@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid, BarChart, Bar } from "recharts";
 
 const MOCK_USERS = [
   { id: "u1", name: "Alex Mwangi", email: "alex@kairos.ai", role: "client", status: "active", joined: "Mar 2024" },
@@ -103,28 +104,37 @@ const Admin = () => {
                 <h3 className="font-display text-lg">Bookings by month</h3>
                 <span className="text-[10px] uppercase tracking-wider text-muted-foreground">2024</span>
               </div>
-              <div className="flex items-end gap-1.5 h-40">
-                {monthly.map((v, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ height: 0 }}
-                    animate={{ height: `${(v / maxM) * 100}%` }}
-                    transition={{ delay: i * 0.04, duration: 0.5 }}
-                    className="flex-1 rounded-t-lg bg-gradient-gold"
-                  />
-                ))}
-              </div>
-              <div className="flex justify-between text-[10px] text-muted-foreground mt-2">
-                <span>Jan</span><span>Apr</span><span>Jul</span><span>Oct</span><span>Dec</span>
+              <div className="h-56">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={monthly.map((v, i) => ({ m: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][i], bookings: v }))}>
+                    <defs>
+                      <linearGradient id="grBk" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="hsl(var(--accent))" stopOpacity={0.5} />
+                        <stop offset="100%" stopColor="hsl(var(--accent))" stopOpacity={0} />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
+                    <XAxis dataKey="m" stroke="hsl(var(--muted-foreground))" fontSize={11} tickLine={false} axisLine={false} />
+                    <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} tickLine={false} axisLine={false} />
+                    <Tooltip contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 12, fontSize: 12 }} />
+                    <Area type="monotone" dataKey="bookings" stroke="hsl(var(--accent))" strokeWidth={2} fill="url(#grBk)" />
+                  </AreaChart>
+                </ResponsiveContainer>
               </div>
             </div>
 
             <div className="rounded-2xl border border-border bg-card p-5">
               <h3 className="font-display text-lg mb-4">Revenue by category</h3>
-              <div className="space-y-3">
-                {byCategory.map((b) => (
-                  <Bar key={b.cat} label={CATEGORY_META[b.cat].label} value={Math.round(b.revenue)} max={Math.round(maxRev)} />
-                ))}
+              <div className="h-56">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={byCategory.map((b) => ({ name: CATEGORY_META[b.cat].label, revenue: Math.round(b.revenue) }))}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
+                    <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={10} tickLine={false} axisLine={false} />
+                    <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `$${v >= 1000 ? `${(v / 1000).toFixed(0)}k` : v}`} />
+                    <Tooltip contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 12, fontSize: 12 }} formatter={(v: number) => `$${v.toLocaleString()}`} />
+                    <Bar dataKey="revenue" fill="hsl(var(--primary))" radius={[6, 6, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
               </div>
             </div>
           </div>
