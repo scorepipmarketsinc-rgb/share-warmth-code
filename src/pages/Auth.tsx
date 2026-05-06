@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { Sparkles, Loader2, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useApp } from "@/lib/store";
 import { Role } from "@/lib/kairos-data";
+import { login as apiLogin, register as apiRegister } from "@/lib/auth";
 import { toast } from "sonner";
 import kairosLogo from "@/assets/kairos-logo.png";
 
@@ -15,16 +16,10 @@ const roleRedirect: Record<Role, string> = {
   client: "/dashboard",
 };
 
-// Simple email→role map for the mock backend
-const roleFromEmail = (email: string): Role => {
-  const e = email.toLowerCase();
-  if (e.includes("admin")) return "admin";
-  if (e.includes("agent") || e.includes("host")) return "agent";
-  return "client";
-};
-
 export function AuthPage({ mode }: { mode: "login" | "register" }) {
   const navigate = useNavigate();
+  const [params] = useSearchParams();
+  const next = params.get("next");
   const { setRole } = useApp();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -46,12 +41,12 @@ export function AuthPage({ mode }: { mode: "login" | "register" }) {
     }
     setLoading(true);
     try {
-      // Mock POST /api/auth/login | /api/auth/register
-      await new Promise((r) => setTimeout(r, 800));
-      const role = roleFromEmail(email);
-      setRole(role);
+      const u = mode === "login"
+        ? await apiLogin(email, password)
+        : await apiRegister(name, email, password);
+      setRole(u.role);
       toast.success(mode === "login" ? "Welcome back" : "Account created");
-      navigate(roleRedirect[role], { replace: true });
+      navigate(next || roleRedirect[u.role], { replace: true });
     } catch {
       setError("Something went wrong. Try again.");
     } finally {

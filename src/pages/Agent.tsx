@@ -24,6 +24,7 @@ import { LISTINGS, CATEGORY_META } from "@/lib/kairos-data";
 import { useApp } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, LineChart, Line } from "recharts";
 
 type ListingStatus = "pending" | "approved" | "rejected";
 
@@ -341,24 +342,41 @@ const Agent = () => {
             <Stat label="Avg / month" value={`$${totals.monthly.toLocaleString()}`} icon={TrendingUp} />
           </div>
 
-          <div className="rounded-2xl border border-border bg-card p-4 md:p-5">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-display text-lg">Earnings trend</h3>
-              <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Last 12 mo</span>
+          <div className="grid lg:grid-cols-2 gap-4">
+            <div className="rounded-2xl border border-border bg-card p-4 md:p-5">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-display text-lg">Earnings trend</h3>
+                <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Last 12 mo</span>
+              </div>
+              <div className="h-56">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={monthlyTrend.map((v, i) => ({ m: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][i], earnings: v * 100 }))}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
+                    <XAxis dataKey="m" stroke="hsl(var(--muted-foreground))" fontSize={11} tickLine={false} axisLine={false} />
+                    <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `$${v >= 1000 ? `${(v / 1000).toFixed(0)}k` : v}`} />
+                    <Tooltip contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 12, fontSize: 12 }} formatter={(v: number) => `$${v.toLocaleString()}`} />
+                    <Bar dataKey="earnings" fill="hsl(var(--accent))" radius={[8, 8, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
             </div>
-            <div className="flex items-end gap-1.5 h-32 md:h-40">
-              {monthlyTrend.map((v, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ height: 0 }}
-                  animate={{ height: `${(v / maxM) * 100}%` }}
-                  transition={{ delay: i * 0.04, duration: 0.5 }}
-                  className="flex-1 rounded-t-lg bg-gradient-gold"
-                />
-              ))}
-            </div>
-            <div className="flex justify-between text-[10px] text-muted-foreground mt-2">
-              <span>Jan</span><span>Apr</span><span>Jul</span><span>Oct</span><span>Dec</span>
+
+            <div className="rounded-2xl border border-border bg-card p-4 md:p-5">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-display text-lg">Bookings velocity</h3>
+                <span className="text-[10px] uppercase tracking-wider text-muted-foreground">12 weeks</span>
+              </div>
+              <div className="h-56">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={Array.from({ length: 12 }).map((_, i) => ({ w: `W${i + 1}`, bookings: 4 + Math.round(Math.sin(i / 1.5) * 3 + i * 0.6) }))}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
+                    <XAxis dataKey="w" stroke="hsl(var(--muted-foreground))" fontSize={11} tickLine={false} axisLine={false} />
+                    <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} tickLine={false} axisLine={false} />
+                    <Tooltip contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 12, fontSize: 12 }} />
+                    <Line type="monotone" dataKey="bookings" stroke="hsl(var(--primary))" strokeWidth={2} dot={{ r: 3 }} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
             </div>
           </div>
         </TabsContent>

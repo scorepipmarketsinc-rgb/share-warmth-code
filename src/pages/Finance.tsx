@@ -7,6 +7,19 @@ import { LISTINGS } from "@/lib/kairos-data";
 import { useApp } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import {
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  PieChart,
+  Pie,
+  Cell,
+  Legend,
+} from "recharts";
 
 type Txn = {
   id: string;
@@ -102,6 +115,12 @@ const Finance = () => {
     return { total, fees, payouts, monthlyMap, thisMonth };
   }, [transactions]);
 
+  const methodSplit = useMemo(() => {
+    const map: Record<string, number> = { card: 0, wallet: 0, transfer: 0 };
+    transactions.forEach((t) => (map[t.method] += t.amount));
+    return Object.entries(map).map(([name, value]) => ({ name, value }));
+  }, [transactions]);
+
   const maxM = Math.max(...totals.monthlyMap, 1);
 
   const exportCsv = () => {
@@ -151,29 +170,49 @@ const Finance = () => {
         <Stat label="Host payouts 85%" value={`$${Math.round(totals.payouts).toLocaleString()}`} icon={Wallet} hint="net to providers" />
       </div>
 
-      {/* Monthly chart */}
-      <div className="rounded-2xl border border-border bg-card p-4 md:p-5 mt-6">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="font-display text-lg">Monthly revenue</h3>
-          <span className="text-[10px] uppercase tracking-wider text-muted-foreground">{new Date().getFullYear()}</span>
+      {/* Charts: revenue trend + method split */}
+      <div className="grid lg:grid-cols-3 gap-4 mt-6">
+        <div className="lg:col-span-2 rounded-2xl border border-border bg-card p-4 md:p-5">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-display text-lg">Monthly revenue</h3>
+            <span className="text-[10px] uppercase tracking-wider text-muted-foreground">{new Date().getFullYear()}</span>
+          </div>
+          <div className="h-56 md:h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={totals.monthlyMap.map((v, i) => ({ m: MONTHS[i], revenue: Math.round(v), fee: Math.round(v * 0.15) }))}>
+                <defs>
+                  <linearGradient id="grRev" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="hsl(var(--accent))" stopOpacity={0.6} />
+                    <stop offset="100%" stopColor="hsl(var(--accent))" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
+                <XAxis dataKey="m" stroke="hsl(var(--muted-foreground))" fontSize={11} tickLine={false} axisLine={false} />
+                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `$${v >= 1000 ? `${(v / 1000).toFixed(0)}k` : v}`} />
+                <Tooltip contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 12, fontSize: 12 }} formatter={(v: number) => `$${v.toLocaleString()}`} />
+                <Area type="monotone" dataKey="revenue" stroke="hsl(var(--accent))" strokeWidth={2} fill="url(#grRev)" />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
         </div>
-        <div className="flex items-end gap-1.5 h-32 md:h-44">
-          {totals.monthlyMap.map((v, i) => (
-            <motion.div
-              key={i}
-              initial={{ height: 0 }}
-              animate={{ height: `${(v / maxM) * 100}%` }}
-              transition={{ delay: i * 0.04, duration: 0.5 }}
-              className={cn(
-                "flex-1 rounded-t-lg",
-                i === new Date().getMonth() ? "bg-gradient-gold" : "bg-muted-foreground/30"
-              )}
-              title={`${MONTHS[i]}: $${Math.round(v).toLocaleString()}`}
-            />
-          ))}
-        </div>
-        <div className="flex justify-between text-[10px] text-muted-foreground mt-2">
-          {MONTHS.map((m) => <span key={m}>{m}</span>)}
+
+        <div className="rounded-2xl border border-border bg-card p-4 md:p-5">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-display text-lg">Payment methods</h3>
+          </div>
+          <div className="h-56 md:h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie data={methodSplit} dataKey="value" nameKey="name" innerRadius={45} outerRadius={80} paddingAngle={3}>
+                  {methodSplit.map((_, i) => (
+                    <Cell key={i} fill={["hsl(var(--accent))", "hsl(var(--primary))", "hsl(var(--muted-foreground))"][i % 3]} />
+                  ))}
+                </Pie>
+                <Tooltip contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 12, fontSize: 12 }} formatter={(v: number) => `$${Math.round(v).toLocaleString()}`} />
+                <Legend wrapperStyle={{ fontSize: 11 }} />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       </div>
 
