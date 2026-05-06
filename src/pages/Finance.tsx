@@ -7,6 +7,19 @@ import { LISTINGS } from "@/lib/kairos-data";
 import { useApp } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import {
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  PieChart,
+  Pie,
+  Cell,
+  Legend,
+} from "recharts";
 
 type Txn = {
   id: string;
