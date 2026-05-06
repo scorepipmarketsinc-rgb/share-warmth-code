@@ -44,7 +44,7 @@ export function AuthPage({ mode }: { mode: "login" | "register" }) {
         : await apiRegister(name, email, password);
       setRole(u.role);
       toast.success(mode === "login" ? "Welcome back" : "Account created");
-      navigate(roleRedirect[u.role], { replace: true });
+      navigate(next || roleRedirect[u.role], { replace: true });
     } catch {
       setError("Something went wrong. Try again.");
     } finally {
