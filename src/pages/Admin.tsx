@@ -29,7 +29,7 @@ const Stat = ({ label, value, icon: Icon, hint }: { label: string; value: string
   </motion.div>
 );
 
-const Bar = ({ label, value, max }: { label: string; value: number; max: number }) => (
+const BarRow = ({ label, value, max }: { label: string; value: number; max: number }) => (
   <div>
     <div className="flex justify-between text-xs mb-1">
       <span>{label}</span><span className="tabular-nums text-muted-foreground">{value}</span>
@@ -304,7 +304,7 @@ const Admin = () => {
             <h3 className="font-display text-lg mb-4">Top categories</h3>
             <div className="space-y-3">
               {byCategory.sort((a, b) => b.revenue - a.revenue).map((b) => (
-                <Bar key={b.cat} label={CATEGORY_META[b.cat].label} value={Math.round(b.revenue)} max={Math.round(maxRev)} />
+                <BarRow key={b.cat} label={CATEGORY_META[b.cat].label} value={Math.round(b.revenue)} max={Math.round(maxRev)} />
               ))}
             </div>
           </div>
