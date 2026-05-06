@@ -18,6 +18,8 @@ const roleRedirect: Record<Role, string> = {
 
 export function AuthPage({ mode }: { mode: "login" | "register" }) {
   const navigate = useNavigate();
+  const [params] = useSearchParams();
+  const next = params.get("next");
   const { setRole } = useApp();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
